@@ -1,0 +1,15 @@
+{
+    "name": "arris/drcalculus",
+    "description": "Dr. Calculus statistics уengine",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Karel Wintersky",
+            "email": "karel.wintersky@gmail.com"
+        }
+    ],
+    "require": {
+        "karelwintersky/arris": "^1.53"
+    }
+}
