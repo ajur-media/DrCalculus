@@ -68,14 +68,14 @@ ON DUPLICATE KEY UPDATE
     `event_count` = `event_count` + 1;
         ";
 
-        $sth = DBC()->prepare($sql_query);
+        $sth = self::$pdo->prepare($sql_query);
         $r = $sth->execute([
             'item_id'   =>  $item_id,
             'item_type' =>  $item_type,
         ]);
         return [
             'state'     =>  $r,
-            'lid'       =>  DBC()->lastInsertId()
+            'lid'       =>  self::$pdo->lastInsertId()
         ];
     }
 
