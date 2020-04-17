@@ -4,7 +4,9 @@ namespace Arris\DrCalculus;
 
 use Arris\AppLogger;
 use Exception;
+use Monolog\Handler\NullHandler;
 use Monolog\Logger;
+use PDO;
 use function Arris\DBC;
 
 class DrCalculus implements DrCalculusInterface
@@ -25,17 +27,23 @@ class DrCalculus implements DrCalculusInterface
      */
     public static $is_engine_disabled;
 
-    public static function init($allowed_item_types = [], Logger $logger = null)
+    /**
+     * @var PDO
+     */
+    public static $pdo;
+
+    public static function init(PDO $pdo_connection, $allowed_item_types = [], Logger $logger = null)
     {
+        self::$pdo = $pdo_connection;
+
         if (!empty($allowed_item_types)) {
             self::$allowed_item_types = $allowed_item_types;
         }
 
-        if ($logger instanceof Logger) {
-            self::$logger = $logger;
-        } else {
-            self::$logger = AppLogger::addNullLogger();
-        }
+        self::$logger
+            = $logger instanceof Logger
+            ? $logger
+            : (new Logger('null'))->pushHandler(new NullHandler());
 
         self::$is_engine_disabled = getenv('DEBUG.DISABLE_DRCALCULUS_STATS_ENGINE');
     }
@@ -109,7 +117,7 @@ ORDER BY event_date ASC
 
         }
 
-        $sth = DBC()->prepare($sql);
+        $sth = self::$pdo->prepare($sql);
         $sth->execute($sql_conditions);
 
         return $sth->fetchAll();
@@ -124,7 +132,7 @@ SELECT `event_count`
 FROM `stat_nviews`
 WHERE `item_id` = :item_id AND `item_type` = :item_type AND `event_date` = NOW()
         ";
-        $sth = DBC()->prepare($sql_query);
+        $sth = self::$pdo->prepare($sql_query);
         $sth->execute([
             'item_id'   =>  $item_id,
             'item_type' =>  $item_type
@@ -140,7 +148,7 @@ SELECT SUM(`event_count`)
 FROM `stat_nviews`
 WHERE `item_id` = :item_id and `item_type` = :item_type;
         ";
-        $sth = DBC()->prepare($sql_query);
+        $sth = self::$pdo->prepare($sql_query);
         $sth->execute([
             'item_id'   =>  $item_id,
             'item_type' =>  $item_type
@@ -172,7 +180,7 @@ FROM `stat_nviews`
 WHERE `item_id` = :item_id and `item_type` = :item_type
 ORDER BY `event_date` DESC 
         ";
-        $sth = DBC()->prepare($sql_query);
+        $sth = self::$pdo->prepare($sql_query);
         $sth->execute([
             'item_id'   =>  $item_id,
             'item_type' =>  $item_type

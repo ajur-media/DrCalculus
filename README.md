@@ -11,7 +11,9 @@ CREATE TABLE `stat_nviews` (
 
 Инициализируем:
 ```
-\Arris\DrCalculus\DrCalculus::init(['article','report','page']);
+$pdo_connection = DB::C(); // or other PDO connector
+
+\Arris\DrCalculus\DrCalculus::init($pdo_connection, ['article','report','page']);
 ```
 
 Записываем статистику:
