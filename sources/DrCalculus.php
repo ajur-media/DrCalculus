@@ -2,12 +2,10 @@
 
 namespace Arris\DrCalculus;
 
-use Arris\AppLogger;
 use Exception;
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use PDO;
-use function Arris\DBC;
 
 class DrCalculus implements DrCalculusInterface
 {

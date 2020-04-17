@@ -15,7 +15,7 @@
     "require": {
         "php": ">=7",
         "ext-pdo": "*",
-        "karelwintersky/arris": "^1.54"
+        "monolog/monolog": "^2.0"
     },
     "autoload": {
         "files": [
