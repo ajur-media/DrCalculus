@@ -1,6 +1,6 @@
 {
-    "name": "arris/drcalculus",
-    "description": "Dr. Calculus statistics уengine",
+    "name": "karelwintersky/arris.drcalculus",
+    "description": "Dr. Calculus statistics engine",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -9,7 +9,20 @@
             "email": "karel.wintersky@gmail.com"
         }
     ],
+    "config": {
+        "optimize-autoloader": true
+    },
     "require": {
-        "karelwintersky/arris": "^1.53"
+        "php": ">=7",
+        "ext-pdo": "*",
+        "karelwintersky/arris": "^1.54"
+    },
+    "autoload": {
+        "files": [
+            "functions/helpers.php"
+        ],
+        "psr-4": {
+            "Arris\\DrCalculus\\"           : ["sources/", "interfaces/"]
+        }
     }
 }
