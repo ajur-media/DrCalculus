@@ -1,3 +1,5 @@
+# Создаем таблицу для статистики 
+
 ```
 -- создание таблицы 
 CREATE TABLE `stat_nviews` (
@@ -9,16 +11,23 @@ CREATE TABLE `stat_nviews` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 ```
 
-Инициализируем:
+# Инициализируем
 ```
+use \Arris\DrCalculus\DrCalculus;
+
 $pdo_connection = DB::C(); // or other PDO connector
 
-\Arris\DrCalculus\DrCalculus::init($pdo_connection, ['article','report','page']);
+DrCalculus::init($pdo_connection, ['article','report','page']);
 ```
 
-Записываем статистику:
+# Записываем статистику:
 
 ```
-...::updateVisitCount($article['id'], 'article');
+DrCalculus::updateVisitCount($article['id'], 'article');
 ```
+
+# TODO
+
+- Отвязать ли от таблицы `stat_nviews` ?
+
 

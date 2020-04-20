@@ -10,6 +10,11 @@ use PDO;
 class DrCalculus implements DrCalculusInterface
 {
     /**
+     * @var string
+     */
+    private static $sql_table = 'stat_nviews';
+
+    /**
      * Monolog logger instance
      * @var Logger
      */
@@ -33,6 +38,7 @@ class DrCalculus implements DrCalculusInterface
     public static function init(PDO $pdo_connection, $allowed_item_types = [], Logger $logger = null)
     {
         self::$pdo = $pdo_connection;
+        self::$sql_table = 'stat_nviews';
 
         if (!empty($allowed_item_types)) {
             self::$allowed_item_types = $allowed_item_types;
@@ -56,6 +62,13 @@ class DrCalculus implements DrCalculusInterface
      */
     public static function updateVisitCount($item_id, $item_type)
     {
+        if (self::$is_engine_disabled) {
+            return [
+                'state'     =>  'Dr.Calculus stats engine not ready',
+                'lid'       =>  0
+            ];
+        }
+
         $sql_query = "
  INSERT INTO
     stat_nviews
@@ -194,6 +207,8 @@ ORDER BY `event_date` DESC
         }
         return $result;
     }
+
+
 
 
 

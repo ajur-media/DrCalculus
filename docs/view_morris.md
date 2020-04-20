@@ -1,8 +1,8 @@
 показ:
 ```
-$data = SBStatistic::getItemViewCount($id, 'article');
+$data = DrCalculus::getItemViewCount($id, 'article');
 
-list($export, $visit_total) = SBStatistic::prepareDataForMorrisStatview($data);
+list($export, $visit_total) = DrCalculus::prepareDataForMorrisStatview($data);
 
 $this->smarty->assign("json_dataset", json_encode($export));
 $this->smarty->assign("dataset", $data);
