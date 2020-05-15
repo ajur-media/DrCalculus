@@ -5,8 +5,10 @@ namespace Arris\DrCalculus;
 use Exception;
 
 interface DrCalculusFunctionsInterface {
+
     function invoke():array;
     function prepareDataForMorrisStatview(array $data):array;
+
 }
 
 if (!function_exists('Arris\DrCalculus\invoke')) {
@@ -53,10 +55,10 @@ if (!function_exists('Arris\DrCalculus\invoke')) {
                 throw new Exception("Ошибка вставки данных в БД", 3);
 
             $response = [
-                'id'    =>  $id,
-                'type'  =>  $item_type,
                 'status'=>  'ok',
                 'message'=> 'ok',
+                'id'    =>  $id,
+                'type'  =>  $item_type,
                 'lid'   =>  $updateState['lid'],
             ];
         } catch (Exception $e) {
@@ -98,3 +100,5 @@ if (!function_exists('Arris\DrCalculus\prepareDataForMorrisStatview')) {
         return [ $export, $visit_total ];
     }
 }
+
+# -eof-
