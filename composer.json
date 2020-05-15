@@ -9,14 +9,13 @@
             "email": "karel.wintersky@gmail.com"
         }
     ],
-    "version": "1.1",
+    "version": "1.2",
     "config": {
         "optimize-autoloader": true
     },
     "require": {
         "php": ">=7",
-        "ext-pdo": "*",
-        "monolog/monolog": "^1.23"
+        "ext-pdo": "*"
     },
     "autoload": {
         "files": [

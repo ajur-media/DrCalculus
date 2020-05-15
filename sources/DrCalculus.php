@@ -3,8 +3,6 @@
 namespace Arris\DrCalculus;
 
 use Exception;
-use Monolog\Handler\NullHandler;
-use Monolog\Logger;
 use PDO;
 
 class DrCalculus implements DrCalculusInterface
@@ -13,12 +11,6 @@ class DrCalculus implements DrCalculusInterface
      * @var string
      */
     private static $sql_table = 'stat_nviews';
-
-    /**
-     * Monolog logger instance
-     * @var Logger
-     */
-    public static $logger;
 
     /**
      * @var array
@@ -54,11 +46,6 @@ class DrCalculus implements DrCalculusInterface
         }
 
         self::$sql_table = $stat_table;
-
-        /*self::$logger
-            = $logger instanceof Logger
-            ? $logger
-            : (new Logger('null'))->pushHandler(new NullHandler());*/
 
         self::$is_engine_disabled = self::$is_engine_disabled || $is_engine_disabled || getenv('DEBUG.DISABLE_DRCALCULUS_STATS_ENGINE');
     }
