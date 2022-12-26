@@ -9,7 +9,6 @@
             "email": "karel.wintersky@gmail.com"
         }
     ],
-    "version": "1.2",
     "config": {
         "optimize-autoloader": true
     },
