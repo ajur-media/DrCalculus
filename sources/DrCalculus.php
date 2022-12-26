@@ -36,7 +36,7 @@ class DrCalculus implements DrCalculusInterface
      * @param bool $is_engine_disabled  -- разрешено ли DrCalculus заполнять статистику. Рекомендуется передавать сюда что-то вроде `getenv('DEBUG.DISABLE_DRCALCULUS_STATS_ENGINE')` )
      *
      */
-    public static function init(PDO $pdo_connection, array $allowed_item_types = [], $is_engine_disabled = false, $stat_table = 'stat_nviews')
+    public static function init($pdo_connection, array $allowed_item_types = [], bool $is_engine_disabled = false, string $stat_table = 'stat_nviews')
     {
         self::$pdo = $pdo_connection;
 
@@ -61,6 +61,7 @@ class DrCalculus implements DrCalculusInterface
      */
     public static function updateVisitCount($item_id, $item_type)
     {
+        $sql_table = self::$sql_table;
         if (self::$is_engine_disabled) {
             return [
                 'state'     =>  'Dr.Calculus stats engine not ready',
@@ -70,7 +71,7 @@ class DrCalculus implements DrCalculusInterface
 
         $sql_query = "
  INSERT INTO
-    stat_nviews
+    {$sql_table}
 SET
     `item_id` = :item_id,
     `item_type` = :item_type,
@@ -100,13 +101,15 @@ ON DUPLICATE KEY UPDATE
      */
     public static function removeVisitData($item_id, $item_type)
     {
+        $sql_table = self::$sql_table;
+
         if (self::$is_engine_disabled) {
             return [
                 'state'     =>  'Dr.Calculus stats engine not ready',
                 'lid'       =>  0
             ];
         }
-        $sql_query = "DELETE FROM stat_nviews WHERE item_id = :item_id AND item_type = :item_type";
+        $sql_query = "DELETE FROM {$sql_table} WHERE item_id = :item_id AND item_type = :item_type";
 
         $sth = self::$pdo->prepare($sql_query);
         $r = $sth->execute(['item_id' => $item_id, 'item_type' => $item_type]);
@@ -125,6 +128,8 @@ ON DUPLICATE KEY UPDATE
      */
     public static function getItemViewCount(int $id, string $type, $last_days_interval = null)
     {
+        $sql_table = self::$sql_table;
+
         if (!in_array($type, self::$allowed_item_types)) return [];
 
         // значения для плейсхолдеров в запросе
@@ -138,7 +143,7 @@ ON DUPLICATE KEY UPDATE
             // добавляем AND event_date between date(now() - interval :days day) and date(now())
 
             $sql = "
-SELECT * FROM stat_nviews 
+SELECT * FROM {$sql_table} 
 WHERE item_type = :type 
   AND item_id = :id 
   AND event_date between date(now() - interval :days day) and date(now())
@@ -151,7 +156,7 @@ ORDER BY event_date
         } else {
 
             $sql = "
-SELECT * FROM stat_nviews 
+SELECT * FROM {$sql_table} 
 WHERE item_type = :type 
   AND item_id = :id 
 ORDER BY event_date                  
@@ -174,9 +179,11 @@ ORDER BY event_date
      */
     public static function getVisitCountToday($item_id, $item_type)
     {
+        $sql_table = self::$sql_table;
+
         $sql_query = "
 SELECT `event_count` 
-FROM `stat_nviews`
+FROM {$sql_table} 
 WHERE `item_id` = :item_id AND `item_type` = :item_type AND `event_date` = NOW()
         ";
         $sth = self::$pdo->prepare($sql_query);
@@ -197,9 +204,11 @@ WHERE `item_id` = :item_id AND `item_type` = :item_type AND `event_date` = NOW()
      */
     public static function getVisitCountTotal($item_id, $item_type)
     {
+        $sql_table = self::$sql_table;
+
         $sql_query = "
 SELECT SUM(`event_count`) 
-FROM `stat_nviews`
+FROM {$sql_table} 
 WHERE `item_id` = :item_id and `item_type` = :item_type;
         ";
         $sth = self::$pdo->prepare($sql_query);
@@ -221,9 +230,11 @@ WHERE `item_id` = :item_id and `item_type` = :item_type;
      */
     public static function getVisitCountTodaySummary($item_id, $item_type)
     {
+        $sql_table = self::$sql_table;
+
         $sql_query = "
 SELECT `event_count`, `event_date` 
-FROM `stat_nviews`
+FROM {$sql_table} 
 WHERE `item_id` = :item_id and `item_type` = :item_type
 ORDER BY `event_date` DESC 
         ";

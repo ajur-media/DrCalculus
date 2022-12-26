@@ -5,10 +5,8 @@ namespace Arris\DrCalculus;
 use Exception;
 
 interface DrCalculusFunctionsInterface {
-
     function invoke():array;
     function prepareDataForMorrisStatview(array $data):array;
-
 }
 
 if (!function_exists('Arris\DrCalculus\invoke')) {
@@ -29,30 +27,35 @@ if (!function_exists('Arris\DrCalculus\invoke')) {
      *
      * @return array
      */
-    function invoke()
+    function invoke(): array
     {
         try {
-            if (DrCalculus::$is_engine_disabled)
+            if (DrCalculus::$is_engine_disabled) {
                 throw new \Exception('Dr.Calculus stats engine not ready', 999);
+            }
 
             $id = intval($_REQUEST['id']);
 
-            if (intval($_REQUEST['id']) == 0)
+            if (intval($_REQUEST['id']) == 0) {
                 throw new Exception('Неправильный ID элемента', 0);
+            }
 
             $item_type = $_REQUEST['item_type'];
-            if (!in_array($item_type, DrCalculus::$allowed_item_types))
+            if (!in_array($item_type, DrCalculus::$allowed_item_types)) {
                 throw new Exception('Неправильный ID семейства', 1);
+            }
 
             $cookie_prefix = $_REQUEST['cookie_name'];
 
-            if (isset($_SESSION[ $cookie_prefix ][ $id ]))
+            if (isset($_SESSION[ $cookie_prefix ][ $id ])) {
                 throw new Exception('Страницу уже посещали', 2);
+            }
 
             $updateState = DrCalculus::updateVisitCount($id, $item_type);
 
-            if (!$updateState['state'])
+            if (!$updateState['state']) {
                 throw new Exception("Ошибка вставки данных в БД", 3);
+            }
 
             $response = [
                 'status'=>  'ok',
